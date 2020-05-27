@@ -1,4 +1,26 @@
+@import url(css/reset.css);
+@font-face {
+  font-family: "Jost";
+  src: url(fonts/jost-book.woff2), url(fonts/jost-book.woff); }
 body {
-    background-color: #ca774a;
-    color: white;
-}
+  background-color: #f70201;
+  color: white;
+  font-family: "Jost";
+  font-size: 24px;
+  line-height: 1.5;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center; }
+
+section {
+  width: 500px; }
+  @media (max-width: 600px) {
+    section {
+      width: 350px;
+      font-size: 16px; } }
+  section p {
+    margin: 24px 0 0 0; }
+
+/*# sourceMappingURL=app.css.map */
