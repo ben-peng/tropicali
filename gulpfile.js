@@ -1,5 +1,66 @@
-var gulp = require('gulp');
+var gulp = require('gulp')
+var sass = require('gulp-sass')
+var cleanCss = require('gulp-clean-css')
+var sourcemaps = require('gulp-sourcemaps')
 
-gulp.task('default', async function() {
-  // place code for your default task here
-});
+// define browserSync and create a server
+var browserSync = require('browser-sync').create()
+
+var imagemin = require('gulp-imagemin')
+
+sass.compiler = require('node-sass')
+
+gulp.task("sass", function(){
+  // we want to run "sass css/app.scss app.css --watch"
+  return gulp.src("src/css/app.scss")
+    .pipe(sourcemaps.init())  
+    .pipe(sass())
+    // create minified CSS file with i8 compatibile syntax
+    .pipe(
+			cleanCss({
+				compatibility: 'ie8'
+				})
+      )
+    .pipe(sourcemaps.write()) // identifies which line of code relates to what after being minified
+    .pipe(gulp.dest("dist"))
+    // tell browserSync to stream these updates
+    .pipe(browserSync.stream())
+})
+
+// copy our index.html file into the final destination, dist folder
+gulp.task("html", function(){
+  return gulp.src("src/*.html")
+    .pipe(gulp.dest("dist"))
+})
+
+// copy all font files into the dist folder
+gulp.task("fonts",function(){
+  return gulp.src("src/fonts/*")
+    .pipe(gulp.dest("dist/fonts"))
+})
+
+// read all image files in our /img folder, 
+// optimise them using imagemin and then copy into the dist folder
+gulp.task("images", function(){
+  return gulp.src("src/img/*")
+    .pipe(imagemin())
+    .pipe(gulp.dest("dist/img"))
+})
+
+gulp.task("watch", function(){
+
+    // initialise the browserSync server
+  browserSync.init({
+    server: {
+      baseDir: "dist"
+    }
+  })
+
+  // if any changes to our html files, the scss file, the fonts folder and the image folder, rerun and reload.
+  gulp.watch("src/*.html", gulp.series("html")).on('change', browserSync.reload)
+  gulp.watch("src/css/app.scss", gulp.series("sass"))
+  gulp.watch("src/fonts/*", gulp.series("fonts"))
+  gulp.watch("src/img/*", gulp.series("images"))
+})
+
+gulp.task('default', gulp.series("html", "sass", "fonts", "images", "watch"))
