@@ -1,0 +1,25 @@
+{
+  "name": "tropicali",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ben-peng/tropicali.git"
+  },
+  "author": "Ben Peng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ben-peng/tropicali/issues"
+  },
+  "homepage": "https://github.com/ben-peng/tropicali#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  },
+  "dependencies": {
+    "resolve-url": "^0.2.1"
+  }
+}
