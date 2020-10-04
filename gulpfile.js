@@ -1,22 +1,41 @@
 var gulp = require('gulp')
-var sass = require('gulp-sass')
+
+// css
 var cleanCss = require('gulp-clean-css')
+var postcss = require("gulp-postcss")
 var sourcemaps = require('gulp-sourcemaps')
+var concat = require("gulp-concat")
 
 // define browserSync and create a server
 var browserSync = require('browser-sync').create()
 
+//images
 var imagemin = require('gulp-imagemin')
 
+// github
 var ghpages = require('gh-pages');
 
-sass.compiler = require('node-sass')
 
-gulp.task("sass", function(cb){
+gulp.task("css", function(cb){
   // we want to run "sass css/app.scss app.css --watch"
-  return gulp.src("src/css/app.scss")
+  return gulp.src([
+    "src/css/reset.css",
+    "src/css/typography.css",
+    "src/css/app.css"
+  ])
     .pipe(sourcemaps.init())  
-    .pipe(sass())
+    .pipe(
+      postcss([
+        require('autoprefixer'),
+        require('postcss-preset-env')({
+          stage: 1, // allows us to apply beta conversions
+          browsers: ['IE 11', 'last 2 versions'] // allows support for IE11 and the last 2 versions of any browser
+        })
+      ])
+    )
+    // concatenate our css files together
+    .pipe(concat("app.css"))
+
     // create minified CSS file with i8 compatibile syntax
     .pipe(
 			cleanCss({
@@ -65,7 +84,7 @@ gulp.task("watch", function(cb){
 
   // if any changes to our html files, the scss file, the fonts folder and the image folder, rerun and reload.
   gulp.watch("src/*.html", gulp.series("html")).on('change', browserSync.reload)
-  gulp.watch("src/css/app.scss", gulp.series("sass"))
+  gulp.watch("src/css/*.css", gulp.series("css"))
   gulp.watch("src/fonts/*", gulp.series("fonts"))
   gulp.watch("src/img/*", gulp.series("images"))
   cb()
@@ -76,4 +95,4 @@ gulp.task("deploy", function(cb){
   cb()
 })
 
-gulp.task('default', gulp.series("html", "sass", "fonts", "images", "watch"))
+gulp.task('default', gulp.series("html", "css", "fonts", "images", "watch"))
