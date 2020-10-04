@@ -75,6 +75,10 @@ section.grid{
 	align-items: center;
 }
 
+section.grid img{
+	width: 100%;
+}
+
 section.grid p{
 	margin: 20px 0;
 }
